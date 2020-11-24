@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { withRouter } from "react-router-dom";
+import { useMutation } from "@apollo/client";
 
-import { Spacing, Container } from 'components/Layout';
-import { H1, Error } from 'components/Text';
-import { InputText, Button } from 'components/Form';
-import Head from 'components/Head';
+import { Spacing, Container } from "components/Layout";
+import { H1, Error } from "components/Text";
+import { InputText, Button } from "components/Form";
+import Head from "components/Head";
 
-import { SIGN_UP } from 'graphql/user';
+import { SIGN_UP } from "graphql/user";
 
-import * as Routes from 'routes';
+import * as Routes from "routes";
+import { UserAPI } from "api";
 
 const Root = styled(Container)`
   display: flex;
@@ -56,14 +57,14 @@ const Form = styled.div`
  * Sign Up page
  */
 const SignUp = ({ history, refetch }) => {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [values, setValues] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    password: '',
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
   });
-  const [signup, { loading }] = useMutation(SIGN_UP);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,27 +73,27 @@ const SignUp = ({ history, refetch }) => {
 
   const validate = () => {
     if (!fullName || !email || !username || !password) {
-      return 'All fields are required';
+      return "All fields are required";
     }
 
     if (fullName.length > 50) {
-      return 'Full name no more than 50 characters';
+      return "Full name no more than 50 characters";
     }
 
     const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(String(email).toLowerCase())) {
-      return 'Enter a valid email address.';
+      return "Enter a valid email address.";
     }
 
     const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
     if (!usernameRegex.test(username)) {
-      return 'Usernames can only use letters, numbers, underscores and periods';
+      return "Usernames can only use letters, numbers, underscores and periods";
     } else if (username.length > 20) {
-      return 'Username no more than 50 characters';
+      return "Username no more than 50 characters";
     }
 
     if (password.length < 6) {
-      return 'Password min 6 characters';
+      return "Password min 6 characters";
     }
 
     return false;
@@ -107,16 +108,21 @@ const SignUp = ({ history, refetch }) => {
       return false;
     }
 
+    setLoading(true);
     try {
-      const response = await signup({
-        variables: { input: { fullName, email, password, username } },
+      const response = await UserAPI.signUp({
+        fullName,
+        email,
+        password,
+        username,
       });
-      localStorage.setItem('token', response.data.signup.token);
+      localStorage.setItem("token", response.token);
       await refetch();
       history.push(Routes.HOME);
     } catch (error) {
-      setError(error.graphQLErrors[0].message);
+      setError(error.message);
     }
+    setLoading(false);
   };
 
   const { fullName, email, password, username } = values;
@@ -126,7 +132,9 @@ const SignUp = ({ history, refetch }) => {
 
       <Welcome>
         <div>
-          <Heading color="white">Connect with friends and the world around you.</Heading>
+          <Heading color="white">
+            Connect with friends and the world around you.
+          </Heading>
         </div>
 
         <p>See photos and updates from your friends.</p>
@@ -139,7 +147,7 @@ const SignUp = ({ history, refetch }) => {
           <H1>Create Account</H1>
         </Spacing>
 
-        <form onSubmit={(e) => handleSubmit(e, signup)}>
+        <form onSubmit={handleSubmit}>
           <InputText
             type="text"
             name="fullName"
