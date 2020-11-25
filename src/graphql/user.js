@@ -1,5 +1,9 @@
-import { gql } from '@apollo/client';
-import { postCommentsPayload, postAuthorPayload, postLikesPayload } from './post';
+import { gql } from "@apollo/client";
+import {
+  postCommentsPayload,
+  postAuthorPayload,
+  postLikesPayload,
+} from "./post";
 
 /**
  * Records to select from user
@@ -14,6 +18,7 @@ const userPayload = `
   coverImage
   coverImagePublicId
   createdAt
+  bio
 `;
 
 /**
