@@ -36,6 +36,7 @@ const signIn = async (payload) => {
  * @property {String} email
  * @property {String} username
  * @property {String} password
+ * @property {String} bio
  *
  * Sign in user and return token
  * @param {SignUpPayload} payload
