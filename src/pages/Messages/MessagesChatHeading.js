@@ -1,17 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { generatePath, withRouter, Link } from 'react-router-dom';
-import { useSubscription } from '@apollo/client';
-
-import Search from 'components/Search';
-import Avatar from 'components/Avatar';
-
-import { IS_USER_ONLINE_SUBSCRIPTION } from 'graphql/user';
-
-import * as Routes from 'routes';
-
-import { useStore } from 'store';
+import Avatar from "components/Avatar";
+import Search from "components/Search";
+import PropTypes from "prop-types";
+import React from "react";
+import { generatePath, Link, withRouter } from "react-router-dom";
+import * as Routes from "routes";
+import styled from "styled-components";
 
 const Root = styled.div`
   position: relative;
@@ -75,21 +68,6 @@ const Online = styled.div`
  * Heading component for messages chat
  */
 const MessagesChatHeading = ({ location, match, chatUser }) => {
-  const [{ auth }] = useStore();
-
-  const { data, loading } = useSubscription(IS_USER_ONLINE_SUBSCRIPTION, {
-    variables: {
-      authUserId: auth.user.id,
-      userId: chatUser ? chatUser.id : null,
-    },
-    skip: !chatUser,
-  });
-
-  // Update user's isOnline field in real time
-  if (!loading && data && chatUser) {
-    chatUser.isOnline = data.isUserOnline.isOnline;
-  }
-
   if (match.params.userId === Routes.NEW_ID_VALUE || !chatUser) {
     return (
       <Root>

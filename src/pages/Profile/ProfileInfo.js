@@ -1,20 +1,14 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { Link, generatePath } from "react-router-dom";
-import { useSubscription } from "@apollo/client";
-
-import { IS_USER_ONLINE_SUBSCRIPTION } from "graphql/user";
-
-import { H1 } from "components/Text";
-import { Spacing } from "components/Layout";
 import Follow from "components/Follow";
-import ProfileImageUpload from "./ProfileImageUpload";
-import ProfileCoverUpload from "./ProfileCoverUpload";
-
-import { useStore } from "store";
-
+import { Spacing } from "components/Layout";
+import { H1 } from "components/Text";
+import PropTypes from "prop-types";
+import React from "react";
+import { generatePath, Link } from "react-router-dom";
 import * as Routes from "routes";
+import { useStore } from "store";
+import styled from "styled-components";
+import ProfileCoverUpload from "./ProfileCoverUpload";
+import ProfileImageUpload from "./ProfileImageUpload";
 
 const Root = styled.div`
   display: flex;
@@ -91,14 +85,7 @@ const List = styled.div`
 const ProfileInfo = ({ user }) => {
   const [{ auth }] = useStore();
 
-  const { data, loading } = useSubscription(IS_USER_ONLINE_SUBSCRIPTION, {
-    variables: { authUserId: auth.user.id, userId: user.id },
-  });
-
   let isUserOnline = user.isOnline;
-  if (!loading && data) {
-    isUserOnline = data.isUserOnline.isOnline;
-  }
 
   return (
     <Root>
