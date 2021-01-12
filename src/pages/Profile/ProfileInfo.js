@@ -10,6 +10,7 @@ import { useStore } from "store";
 import styled from "styled-components";
 import ProfileCoverUpload from "./ProfileCoverUpload";
 import ProfileImageUpload from "./ProfileImageUpload";
+import { uploadFile } from "api/file";
 
 const Root = styled.div`
   display: flex;
@@ -93,7 +94,15 @@ const ProfileInfo = ({ user }) => {
 
   let isUserOnline = user.isOnline;
 
-  const handleUploadPDF = useCallback(console.log, []);
+  const handleUploadPDF = useCallback(
+    async (event) => {
+      const file = event.target.files[0];
+      const filename = `${auth.user.id}_${file.name}`;
+      const url = await uploadFile(filename, file);
+      console.log({ url });
+    },
+    [auth.user]
+  );
 
   return (
     <Root>
