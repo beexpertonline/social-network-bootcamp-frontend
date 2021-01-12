@@ -1,8 +1,9 @@
 import Follow from "components/Follow";
 import { Spacing } from "components/Layout";
 import { H1 } from "components/Text";
+import ResumeUpload from "./ResumeUpload";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useCallback } from "react";
 import { generatePath, Link } from "react-router-dom";
 import * as Routes from "routes";
 import { useStore } from "store";
@@ -79,6 +80,11 @@ const List = styled.div`
   }
 `;
 
+const Centered = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 /**
  * Renders user information in profile page
  */
@@ -86,6 +92,8 @@ const ProfileInfo = ({ user }) => {
   const [{ auth }] = useStore();
 
   let isUserOnline = user.isOnline;
+
+  const handleUploadPDF = useCallback(console.log, []);
 
   return (
     <Root>
@@ -122,6 +130,10 @@ const ProfileInfo = ({ user }) => {
       </ProfileImage>
 
       {user.bio && <p>{user.bio}</p>}
+
+      <Centered>
+        <ResumeUpload handleChange={handleUploadPDF} label="Resume" />
+      </Centered>
 
       <Info>
         <List>

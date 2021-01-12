@@ -1,10 +1,10 @@
-import { useQuery } from "@apollo/client";
+import { getAuthUser } from "api/profile";
 import { Loading } from "components/Loading";
 import Message from "components/Message";
 import NotFound from "components/NotFound";
-import { GET_AUTH_USER } from "graphql/user";
 import AuthLayout from "pages/Auth/AuthLayout";
 import React from "react";
+import { useQuery } from "react-query";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useStore } from "store";
 import AppLayout from "./AppLayout";
@@ -17,9 +17,10 @@ import ScrollToTop from "./ScrollToTop";
 const App = () => {
   const [{ message }] = useStore();
 
-  const { loading, data, error, refetch } = useQuery(GET_AUTH_USER);
+  const { isLoading, data, error, refetch } = useQuery("user", getAuthUser);
 
-  if (loading) return <Loading top="xl" />;
+  if (isLoading) return <Loading top="xl" />;
+
   if (error) {
     const isDevelopment =
       !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -44,11 +45,8 @@ const App = () => {
 
       <ScrollToTop>
         <Switch>
-          {data.getAuthUser ? (
-            <Route
-              exact
-              render={() => <AppLayout authUser={data.getAuthUser} />}
-            />
+          {data ? (
+            <Route exact render={() => <AppLayout authUser={data} />} />
           ) : (
             <Route exact render={() => <AuthLayout refetch={refetch} />} />
           )}

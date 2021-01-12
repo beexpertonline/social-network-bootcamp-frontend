@@ -8,9 +8,9 @@ node_modules/
 # Misc
 .env
 .DS_Store
+debug.log
 
 # Package manager
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
