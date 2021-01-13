@@ -189,6 +189,17 @@ export const SEARCH_USERS = gql`
 `;
 
 /**
+ * Updates user's resume
+ */
+export const UPDATE_USER_RESUME = gql`
+  mutation($input: UpdateUserResumeInput!) {
+    updateUserResume(input: $input) {
+      id
+    }
+  }
+`;
+
+/**
  * Uploads user photo
  */
 export const UPLOAD_PHOTO = gql`

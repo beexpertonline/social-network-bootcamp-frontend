@@ -1,9 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-
-import { Spacing } from "components/Layout";
+import { useMutation } from "@apollo/client";
+import { uploadFile } from "api/file";
 import { PencilIcon } from "components/icons";
+import { Spacing } from "components/Layout";
+import { GET_AUTH_USER, UPDATE_USER_RESUME } from "graphql/user";
+import React, { useCallback, useMemo } from "react";
+import { useStore } from "store";
+import styled from "styled-components";
 
 const Input = styled.input`
   display: none;
@@ -29,27 +31,45 @@ const Label = styled.label`
 /**
  * Component for uploading post image
  */
-const ResumeUpload = ({ handleChange, label }) => (
-  <>
-    <Input
-      name="resume"
-      onChange={handleChange}
-      type="file"
-      id="resume-file"
-      accept="application/pdf"
-    />
+const ResumeUpload = () => {
+  const [{ auth }] = useStore();
 
-    <Label htmlFor="resume-file">
-      <PencilIcon />
+  const updateUserResume = useMutation(UPDATE_USER_RESUME, {
+    refetchQueries: [{ query: GET_AUTH_USER }],
+  });
 
-      {label && <Spacing left="xs">{label}</Spacing>}
-    </Label>
-  </>
-);
+  const handleUploadPDF = useCallback(
+    async (event) => {
+      const file = event.target.files[0];
+      const filename = `${auth.user.id}_${file.name}`;
+      const resume = await uploadFile(filename, file);
+      await updateUserResume({ variables: { input: { resume } } });
+    },
+    [auth.user, updateUserResume]
+  );
 
-ResumeUpload.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  label: PropTypes.string,
+  const label = useMemo(
+    () => (auth?.user?.resume ? "Update Resume" : "Upload Resume"),
+    [auth.user]
+  );
+
+  return (
+    <>
+      <Input
+        name="resume"
+        onChange={handleUploadPDF}
+        type="file"
+        id="resume-file"
+        accept="application/pdf"
+      />
+
+      <Label htmlFor="resume-file">
+        <PencilIcon />
+
+        {label && <Spacing left="xs">{label}</Spacing>}
+      </Label>
+    </>
+  );
 };
 
 export default ResumeUpload;

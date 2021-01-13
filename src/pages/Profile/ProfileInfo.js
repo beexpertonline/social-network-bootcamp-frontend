@@ -1,16 +1,15 @@
 import Follow from "components/Follow";
 import { Spacing } from "components/Layout";
 import { H1 } from "components/Text";
-import ResumeUpload from "./ResumeUpload";
 import PropTypes from "prop-types";
-import React, { useCallback } from "react";
+import React from "react";
 import { generatePath, Link } from "react-router-dom";
 import * as Routes from "routes";
 import { useStore } from "store";
 import styled from "styled-components";
 import ProfileCoverUpload from "./ProfileCoverUpload";
 import ProfileImageUpload from "./ProfileImageUpload";
-import { uploadFile } from "api/file";
+import ResumeUpload from "./ResumeUpload";
 
 const Root = styled.div`
   display: flex;
@@ -94,16 +93,6 @@ const ProfileInfo = ({ user }) => {
 
   let isUserOnline = user.isOnline;
 
-  const handleUploadPDF = useCallback(
-    async (event) => {
-      const file = event.target.files[0];
-      const filename = `${auth.user.id}_${file.name}`;
-      const url = await uploadFile(filename, file);
-      console.log({ url });
-    },
-    [auth.user]
-  );
-
   return (
     <Root>
       <ProfileCoverUpload
@@ -141,7 +130,7 @@ const ProfileInfo = ({ user }) => {
       {user.bio && <p>{user.bio}</p>}
 
       <Centered>
-        <ResumeUpload handleChange={handleUploadPDF} label="Resume" />
+        <ResumeUpload />
       </Centered>
 
       <Info>
