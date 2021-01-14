@@ -3,7 +3,7 @@ import { Button, InputText } from "components/Form";
 import { Spacing } from "components/Layout";
 import { A, Error } from "components/Text";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import * as Routes from "routes";
 import styled from "styled-components";
@@ -39,37 +39,43 @@ const SignIn = ({ history, location, refetch }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { emailOrUsername, password } = values;
+
   useEffect(() => {
     setError("");
   }, [location.pathname]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-  };
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setValues({ ...values, [name]: value });
+    },
+    [values]
+  );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    if (!emailOrUsername || !password) {
-      setError("All fields are required");
-      return;
-    }
+      if (!emailOrUsername || !password) {
+        setError("All fields are required");
+        return;
+      }
 
-    setError("");
-    setLoading(true);
-    try {
-      const response = await UserAPI.signIn({ emailOrUsername, password });
-      localStorage.setItem("token", response.token);
-      await refetch();
-      history.push(Routes.HOME);
-    } catch (error) {
-      setError(error.message);
-    }
-    setLoading(false);
-  };
-
-  const { emailOrUsername, password } = values;
+      setError("");
+      setLoading(true);
+      try {
+        const response = await UserAPI.signIn({ emailOrUsername, password });
+        localStorage.setItem("token", response.token);
+        await refetch();
+        history.push(Routes.HOME);
+      } catch (error) {
+        setError(error.message);
+      }
+      setLoading(false);
+    },
+    [history, emailOrUsername, password, refetch]
+  );
 
   return (
     <form onSubmit={handleSubmit}>

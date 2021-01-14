@@ -13,6 +13,9 @@ export const getAuthUser = async () => {
 
     if (!response.ok) {
       const { message } = await response.json();
+      if (message === "Couldn't authenticate user") {
+        return null;
+      }
       throw new Error(message);
     }
 

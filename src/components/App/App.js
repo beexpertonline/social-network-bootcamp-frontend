@@ -17,7 +17,9 @@ import ScrollToTop from "./ScrollToTop";
 const App = () => {
   const [{ message }] = useStore();
 
-  const { isLoading, data, error, refetch } = useQuery("user", getAuthUser);
+  const { isLoading, data, error, refetch } = useQuery("user", getAuthUser, {
+    retry: 0,
+  });
 
   if (isLoading) return <Loading top="xl" />;
 

@@ -3,7 +3,7 @@ import { uploadFile } from "api/file";
 import { PencilIcon } from "components/icons";
 import { Spacing } from "components/Layout";
 import { GET_AUTH_USER, UPDATE_USER_RESUME } from "graphql/user";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useStore } from "store";
 import styled from "styled-components";
 
@@ -34,24 +34,30 @@ const Label = styled.label`
 const ResumeUpload = () => {
   const [{ auth }] = useStore();
 
+  const [loading, setLoading] = useState(false);
+
   const updateUserResume = useMutation(UPDATE_USER_RESUME, {
     refetchQueries: [{ query: GET_AUTH_USER }],
   });
 
   const handleUploadPDF = useCallback(
     async (event) => {
+      if (loading) {
+        return;
+      }
+      setLoading(true);
       const file = event.target.files[0];
       const filename = `${auth.user.id}_${file.name}`;
       const resume = await uploadFile(filename, file);
       await updateUserResume({ variables: { input: { resume } } });
+      setLoading(false);
     },
-    [auth.user, updateUserResume]
+    [auth.user, updateUserResume, loading]
   );
 
-  const label = useMemo(
-    () => (auth?.user?.resume ? "Update Resume" : "Upload Resume"),
-    [auth.user]
-  );
+  const label = useMemo(() => (loading ? "Uploading..." : "Upload Resume"), [
+    loading,
+  ]);
 
   return (
     <>
@@ -61,6 +67,7 @@ const ResumeUpload = () => {
         type="file"
         id="resume-file"
         accept="application/pdf"
+        disabled={loading}
       />
 
       <Label htmlFor="resume-file">
