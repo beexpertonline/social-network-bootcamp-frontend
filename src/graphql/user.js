@@ -19,6 +19,7 @@ const userPayload = `
   coverImagePublicId
   createdAt
   bio
+  resume
 `;
 
 /**

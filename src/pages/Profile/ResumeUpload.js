@@ -36,7 +36,7 @@ const ResumeUpload = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const updateUserResume = useMutation(UPDATE_USER_RESUME, {
+  const [updateUserResume] = useMutation(UPDATE_USER_RESUME, {
     refetchQueries: [{ query: GET_AUTH_USER }],
   });
 
