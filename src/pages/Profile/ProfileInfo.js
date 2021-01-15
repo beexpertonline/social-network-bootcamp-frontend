@@ -129,9 +129,11 @@ const ProfileInfo = ({ user }) => {
 
       {user.bio && <p>{user.bio}</p>}
 
-      <Centered>
-        <ResumeUpload />
-      </Centered>
+      {auth.user.id === user.id && (
+        <Centered>
+          <ResumeUpload />
+        </Centered>
+      )}
 
       <Info>
         <List>
