@@ -127,8 +127,6 @@ const ProfileInfo = ({ user }) => {
         </FullName>
       </ProfileImage>
 
-      {user.bio && <p>{user.bio}</p>}
-
       {auth.user.id === user.id && (
         <Centered>
           <ResumeUpload />

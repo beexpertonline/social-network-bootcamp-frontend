@@ -58,7 +58,6 @@ const SignUp = ({ history, refetch }) => {
     username: "",
     email: "",
     password: "",
-    bio: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -69,7 +68,7 @@ const SignUp = ({ history, refetch }) => {
 
   const validate = () => {
     if (!fullName || !email || !username || !password) {
-      return "All fields are required except bio";
+      return "All fields are required";
     }
 
     if (fullName.length > 50) {
@@ -111,7 +110,6 @@ const SignUp = ({ history, refetch }) => {
         email,
         password,
         username,
-        bio,
       });
       localStorage.setItem("token", response.token);
       await refetch();
@@ -122,7 +120,7 @@ const SignUp = ({ history, refetch }) => {
     setLoading(false);
   };
 
-  const { fullName, email, password, username, bio } = values;
+  const { fullName, email, password, username } = values;
 
   return (
     <Root maxWidth="lg">
@@ -179,16 +177,6 @@ const SignUp = ({ history, refetch }) => {
               values={password}
               onChange={handleChange}
               placeholder="Password"
-              borderColor="white"
-            />
-          </Spacing>
-          <Spacing top="xs" bottom="xs">
-            <InputText
-              type="bio"
-              name="bio"
-              values={bio}
-              onChange={handleChange}
-              placeholder="Bio"
               borderColor="white"
             />
           </Spacing>
