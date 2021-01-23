@@ -9,7 +9,6 @@ import { useStore } from "store";
 import styled from "styled-components";
 import ProfileCoverUpload from "./ProfileCoverUpload";
 import ProfileImageUpload from "./ProfileImageUpload";
-import ResumeUpload from "./ResumeUpload";
 
 const Root = styled.div`
   display: flex;
@@ -80,11 +79,6 @@ const List = styled.div`
   }
 `;
 
-const Centered = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 /**
  * Renders user information in profile page
  */
@@ -126,12 +120,6 @@ const ProfileInfo = ({ user }) => {
           )}
         </FullName>
       </ProfileImage>
-
-      {auth.user.id === user.id && (
-        <Centered>
-          <ResumeUpload />
-        </Centered>
-      )}
 
       <Info>
         <List>
