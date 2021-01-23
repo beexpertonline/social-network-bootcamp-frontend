@@ -121,6 +121,8 @@ const ProfileInfo = ({ user }) => {
         </FullName>
       </ProfileImage>
 
+      {user.bio && <p>{user.bio}</p>}
+
       <Info>
         <List>
           <b>{user.posts.length} </b> posts

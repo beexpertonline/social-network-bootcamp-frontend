@@ -18,6 +18,7 @@ const userPayload = `
   coverImage
   coverImagePublicId
   createdAt
+  bio
 `;
 
 /**
