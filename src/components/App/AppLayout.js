@@ -8,6 +8,7 @@ import Header from "components/App/Header";
 import NotFound from "components/NotFound";
 import SideBar from "./SideBar";
 import UserSuggestions from "./UserSuggestions";
+import UserNews from "./UserNews";
 
 import Home from "pages/Home";
 import Profile from "pages/Profile";
@@ -41,6 +42,15 @@ const Root = styled.div`
   @media (min-width: ${(p) => parseInt(p.theme.screen.lg, 10) + 20 + "px"}) {
     width: ${(p) => p.theme.screen.lg};
   }
+`;
+
+const RightSideContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RightSideSeparator = styled.div`
+  margin-top: 4em;
 `;
 
 /**
@@ -104,7 +114,11 @@ const AppLayout = ({ location, authUser }) => {
           <Route component={NotFound} />
         </Switch>
 
-        <UserSuggestions pathname={location.pathname} />
+        <RightSideContainer>
+          <UserSuggestions pathname={location.pathname} />
+          <RightSideSeparator />
+          <UserNews pathname={location.pathname} />
+        </RightSideContainer>
       </Root>
     </>
   );
