@@ -19,6 +19,7 @@ const userPayload = `
   coverImagePublicId
   createdAt
   bio
+  resume
 `;
 
 /**
@@ -184,6 +185,17 @@ export const SEARCH_USERS = gql`
       fullName
       username
       image
+    }
+  }
+`;
+
+/**
+ * Updates user's resume
+ */
+export const UPDATE_USER_RESUME = gql`
+  mutation($input: UpdateUserResumeInput!) {
+    updateUserResume(input: $input) {
+      id
     }
   }
 `;
